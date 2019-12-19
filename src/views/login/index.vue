@@ -43,11 +43,22 @@ export default {
   },
   methods: {
     loginCheck () {
-      this.$refs.myForm.validate(function (isOk) {
+      this.$refs.myForm.validate(isOk => {
         if (isOk) {
-          console.log('校验通过')
-        } else {
-          console.log('校验失败')
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.formData
+          }).then(result => {
+            let token = result.data.data.token
+            window.localStorage.setItem('user_token', token)
+            this.$router.push('/home')
+          }).catch(() => {
+            this.$message({
+              message: '手机号或验证码不正确',
+              type: 'warning'
+            })
+          })
         }
       })
     }
