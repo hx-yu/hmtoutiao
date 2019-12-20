@@ -11,13 +11,19 @@
           <!-- 头部 -->
         <layoutheader></layoutheader>
       </el-header>
-      <el-main>主体内容</el-main>
+      <el-main>
+        <!-- 二级路由容器 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
 export default {
+  data () {
+    return {}
+  },
   components: {
   }
 }
