@@ -8,13 +8,13 @@
       <el-col class="right" :span="12">
         <el-row type="flex" justify="end" align="middle">
           <img class="user_pic" :src="userInfo.photo?userInfo.photo:userImg" alt />
-          <el-dropdown>
+          <el-dropdown @command="handlerCommand">
             <span class="el-dropdown-link">{{userInfo.name}}</span>
             <i class="el-icon-arrow-down el-icon--right"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item info="person">个人信息</el-dropdown-item>
-              <el-dropdown-item info="git">git地址</el-dropdown-item>
-              <el-dropdown-item info="logout">退出</el-dropdown-item>
+              <el-dropdown-item command="info">个人信息</el-dropdown-item>
+              <el-dropdown-item command="git">git地址</el-dropdown-item>
+              <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-row>
@@ -31,7 +31,18 @@ export default {
       userImg: require('../../assets/img/avatar.jpg')
     }
   },
-  methods: {},
+  methods: {
+    handlerCommand (command) {
+      if (command === 'info') {
+
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/YHX0507'
+      } else {
+        window.localStorage.removeItem('user_token')
+        this.$router.push('/login')
+      }
+    }
+  },
   created () {
     let token = window.localStorage.getItem('user_token')
     this.$axios({
