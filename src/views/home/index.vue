@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <!-- 左右布局 -->
-    <el-aside>
+    <el-aside style="min-height:100vh;">
       <!-- 左侧导航 -->
       <layoutaside></layoutaside>
     </el-aside>
