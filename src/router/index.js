@@ -10,6 +10,12 @@ export default new VueRouter({
   routes: [
     { path: '/', redirect: '/login' },
     {
-      path: '/home', component: Home, children: [{ path: '', component: HomeMain }]
+      path: '/home',
+      component: Home,
+      children: [
+        { path: '',
+          component: HomeMain },
+        { path: 'commentlist',
+          component: () => import('../views/comment') }]
     }, { path: '/login', component: Login }]
 })
