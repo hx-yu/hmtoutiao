@@ -50,7 +50,7 @@ export default {
             method: 'post',
             data: this.formData
           }).then(result => {
-            let token = result.data.data.token
+            let token = result.data.token
             window.localStorage.setItem('user_token', token)
             this.$router.push('/home')
           }).catch(() => {
