@@ -10,10 +10,6 @@ export default new VueRouter({
   routes: [
     { path: '/', redirect: '/login' },
     {
-      path: '/home',
-      component: Home,
-      children: [{ path: '', component: HomeMain }]
-    },
-    { path: '/login', component: Login }
-  ]
+      path: '/home', component: Home, children: [{ path: '', component: HomeMain }]
+    }, { path: '/login', component: Login }]
 })

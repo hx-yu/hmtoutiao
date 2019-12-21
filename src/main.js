@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
+// 引入导航守卫
+import './permission'
 import router from './router'
 import ElementUI from 'element-ui'
 import axios from 'axios'
