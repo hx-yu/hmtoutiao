@@ -11,7 +11,7 @@
       <el-table-column label="操作">
         <template slot-scope="obj">
           <el-button size="small" type="text">修改</el-button>
-          <el-button @click="openOrClose" size="small" type="text">{{obj.row.comment_status?'关闭':'打开'}}评论</el-button>
+          <el-button @click="openOrClose(obj.row)" size="small" type="text">{{obj.row.comment_status?'关闭':'打开'}}评论</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -38,10 +38,25 @@ export default {
     transState (row, column, cellValue, index) {
       return row.comment_status ? '正常' : '关闭'
     },
-    openOrClose () {
-      this.$axios({
-        url: '/comments/status',
-        method: 'put'
+    openOrClose (obj) {
+      let state = obj.comment_status
+      this.$confirm(`您是否确定要${state ? '关闭' : '打开'}评论么?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios({
+          url: '/comments/status',
+          method: 'put',
+          params: {
+            article_id: obj.id
+          },
+          data: {
+            allow_comment: !obj.comment_status
+          }
+        }).then(result => {
+          this.getComment()
+        })
       })
     }
   },
