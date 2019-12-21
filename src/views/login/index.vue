@@ -53,11 +53,6 @@ export default {
             let token = result.data.token
             window.localStorage.setItem('user_token', token)
             this.$router.push('/home')
-          }).catch(() => {
-            this.$message({
-              message: '手机号或验证码不正确',
-              type: 'warning'
-            })
           })
         }
       })
