@@ -11,10 +11,23 @@
       <el-table-column label="操作">
         <template slot-scope="obj">
           <el-button size="small" type="text">修改</el-button>
-          <el-button @click="openOrClose(obj.row)" size="small" type="text">{{obj.row.comment_status?'关闭':'打开'}}评论</el-button>
+          <el-button
+            @click="openOrClose(obj.row)"
+            size="small"
+            type="text"
+          >{{obj.row.comment_status?'关闭':'打开'}}评论</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-row style="height:80px;" type="flex" justify="center" align="middle">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      @current-change="changePage"
+      :current-page="page.currentPage"
+      :page-size="page.pageSize"
+      :total="page.total"></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -22,16 +35,33 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      page: {
+        pageSize: 10, // 每页显示的条数
+        total: 0, // 评论总条数
+        currentPage: 1 // 当前页数
+      }
     }
   },
   methods: {
+    // 页码改变方法
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getComment()
+    },
+    // 获取评论
     getComment () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: {
+          response_type: 'comment',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
+        }
       }).then(result => {
+        console.log(result)
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     },
     transState (row, column, cellValue, index) {
