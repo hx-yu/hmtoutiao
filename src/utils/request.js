@@ -2,6 +2,7 @@
 import axios from 'axios'
 import router from '../router'
 import { Message } from 'element-ui'
+import JsonBig from 'json-bigint'
 // 请求拦截器
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
 axios.interceptors.request.use(config => {
@@ -9,6 +10,10 @@ axios.interceptors.request.use(config => {
   config.headers.Authorization = `Bearer ${token}`
   return config
 })
+// 在数据返回then或catch前对数据进行处理
+axios.defaults.transformResponse = [data => {
+  return JsonBig.parse(data)
+}]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {
   return response.data ? response.data : {}
@@ -36,6 +41,6 @@ axios.interceptors.response.use(function (response) {
     message,
     type: 'warning'
   })
-  console.log(error)
+  return Promise.reject(error)
 })
 export default axios

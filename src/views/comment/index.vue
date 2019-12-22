@@ -32,7 +32,6 @@ export default {
         params: { response_type: 'comment' }
       }).then(result => {
         this.list = result.data.results
-        console.log(result)
       })
     },
     transState (row, column, cellValue, index) {
@@ -49,7 +48,7 @@ export default {
           url: '/comments/status',
           method: 'put',
           params: {
-            article_id: obj.id
+            article_id: obj.id.toString()
           },
           data: {
             allow_comment: !obj.comment_status
