@@ -16,6 +16,8 @@ export default new VueRouter({
         { path: '',
           component: HomeMain },
         { path: 'commentlist',
-          component: () => import('../views/comment') }]
+          component: () => import('../views/comment') },
+        { path: 'materialmaster',
+          component: () => import('../views/materialmaster') }]
     }, { path: '/login', component: Login }]
 })
