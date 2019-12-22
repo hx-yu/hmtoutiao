@@ -1,8 +1,13 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <breadcrumb slot="header">
       <template slot="title">素材管理</template>
     </breadcrumb>
+    <el-row type="flex" justify="end">
+      <el-upload action="" :http-request="uploadImg" :show-file-list="false">
+        <el-button size="small" type="primary">上传素材</el-button>
+      </el-upload>
+    </el-row>
     <el-tabs v-model="activeName" @tab-click="allOrCollect">
       <el-tab-pane label="全部图片" name="all">
         <div class="img_list">
@@ -43,16 +48,32 @@ export default {
         total: 0,
         pageSize: 8,
         currentPage: 1
-      }
+      },
+      loading: false
     }
   },
   methods: {
+    // 点击页码
     changePage (newPage) {
       this.page.currentPage = newPage
       this.getMaterial()
     },
+    // 收藏或取消收藏
     collectOrCancel (id) {
       alert(id)
+    },
+    uploadImg (params) {
+      this.loading = true
+      let fd = new FormData()
+      fd.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: fd
+      }).then(result => {
+        this.loading = false
+        this.getMaterial()
+      })
     },
     // 点击tabs请求全部列表或收藏列表
     allOrCollect () {
