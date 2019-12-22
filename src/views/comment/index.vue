@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <breadcrumb slot="header">
       <template slot="title">评论列表</template>
     </breadcrumb>
@@ -40,7 +40,8 @@ export default {
         pageSize: 10, // 每页显示的条数
         total: 0, // 评论总条数
         currentPage: 1 // 当前页数
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -51,6 +52,8 @@ export default {
     },
     // 获取评论
     getComment () {
+      // 加载开始
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: {
@@ -59,9 +62,10 @@ export default {
           per_page: this.page.pageSize
         }
       }).then(result => {
-        console.log(result)
         this.list = result.data.results
         this.page.total = result.data.total_count
+        // 加载结束
+        this.loading = false
       })
     },
     transState (row, column, cellValue, index) {
