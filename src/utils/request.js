@@ -12,7 +12,7 @@ axios.interceptors.request.use(config => {
 })
 // 在数据返回then或catch前对数据进行处理
 axios.defaults.transformResponse = [data => {
-  return JsonBig.parse(data)
+  return data ? JsonBig.parse(data) : {} // 处理当data为空字符串的情况
 }]
 // 响应拦截器
 axios.interceptors.response.use(function (response) {

@@ -15,11 +15,11 @@
             <img :src="item.url" alt />
             <el-row type="flex" justify="space-around" align="middle">
               <i
-                @click="collectOrCancel(item.id)"
+                @click="collectOrCancel(item)"
                 :style="{color:item.is_collected?'red':'#ccc'}"
                 class="el-icon-star-on"
               ></i>
-              <i class="el-icon-delete-solid"></i>
+              <i @click="deleteImg(item.id)" class="el-icon-delete-solid"></i>
             </el-row>
           </el-card>
         </div>
@@ -58,9 +58,28 @@ export default {
       this.page.currentPage = newPage
       this.getMaterial()
     },
+    // 删除图片
+    deleteImg (id) {
+      this.$confirm('您真的要删除图片么？').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(result => {
+          this.getMaterial()
+        })
+      })
+    },
     // 收藏或取消收藏
-    collectOrCancel (id) {
-      alert(id)
+    collectOrCancel (item) {
+      this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(result => {
+        this.getMaterial()
+      })
     },
     uploadImg (params) {
       this.loading = true
