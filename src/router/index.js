@@ -20,6 +20,8 @@ export default new VueRouter({
         { path: 'materialmaster',
           component: () => import('../views/materialmaster') },
         { path: 'contentlist',
-          component: () => import('../views/contentlist') }]
+          component: () => import('../views/contentlist') },
+        { path: 'publish',
+          component: () => import('../views/publish') }]
     }, { path: '/login', component: Login }]
 })
