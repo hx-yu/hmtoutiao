@@ -43,7 +43,7 @@
         <span>
           <i class="el-icon-edit"></i>修改
         </span>
-        <span>
+        <span @click="delContent(item.id.toString())">
           <i class="el-icon-delete"></i>删除
         </span>
       </div>
@@ -84,6 +84,22 @@ export default {
     }
   },
   methods: {
+    // 删除内容列表
+    delContent (id) {
+      alert(id)
+      this.$confirm('确定真的要删除这条内容么').then(() => {
+        this.$axios({
+          url: `/articles/${id}`,
+          method: 'delete'
+        }).then(result => {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getContentList()
+        })
+      })
+    },
     // 搜索区域发生改变
     getChange () {
       this.page.currentPage = 1
