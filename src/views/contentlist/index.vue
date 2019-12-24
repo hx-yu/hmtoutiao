@@ -5,7 +5,7 @@
       </breadcrumb>
       <el-form>
         <el-form-item label="文章状态：">
-          <el-radio-group v-model="searchForm.radio">
+          <el-radio-group v-model="searchForm.radio" @change="getChange">
             <el-radio :label="5">全部</el-radio>
             <el-radio :label="0">草稿</el-radio>
             <el-radio :label="1">待审核</el-radio>
@@ -14,12 +14,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表：">
-          <el-select v-model="searchForm.channel" placeholder="请选择频道">
+          <el-select v-model="searchForm.channel" placeholder="请选择频道" @change="getChange">
             <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择：">
-          <el-date-picker v-model="searchForm.dateRange" type="daterange"></el-date-picker>
+          <el-date-picker v-model="searchForm.dateRange" type="daterange" @change="getChange" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
       </el-form>
       <el-row type="flex" align="middle" class="finddata">
@@ -46,21 +46,35 @@
 export default {
   data () {
     return {
-      contentList: [],
-      channels: [],
+      // 搜索取数据
       searchForm: {
         radio: 5,
         channel: null,
         dateRange: []
       },
+      // 内容列表数据
+      contentList: [],
+      // 频道数据
+      channels: [],
       defaultImg: require('../../assets/img/back.jpeg')
     }
   },
   methods: {
+    // 搜索区域发生改变
+    getChange () {
+      let params = {
+        status: this.searchForm.radio === 5 ? null : this.searchForm.radio,
+        channel_id: this.searchForm.channel,
+        begin_pubdate: this.searchForm.dateRange.length === 0 ? null : this.searchForm.dateRange[0],
+        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+      }
+      this.getContentList(params)
+    },
     // 获取内容列表
-    getContentList () {
+    getContentList (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(result => {
         this.contentList = result.data.results
       })
