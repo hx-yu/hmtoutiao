@@ -14,8 +14,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道列表：">
-          <el-select v-model="searchForm.value" placeholder="请选择频道">
-            <el-option v-for="item in 3" :key="item.id" :label="item.lable" :value="item.value"></el-option>
+          <el-select v-model="searchForm.channel" placeholder="请选择频道">
+            <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="时间选择：">
@@ -23,15 +23,15 @@
         </el-form-item>
       </el-form>
       <el-row type="flex" align="middle" class="finddata">
-        共找到10000条数据
+        <p>共找到10000条数据</p>
       </el-row>
-      <div class="contentlist">
+      <div class="contentlist" v-for="item in contentList" :key="item.id.toString()">
         <div class="left">
-          <img src="../../assets/img/back.png" alt="">
+          <img :src="item.cover.images.length?item.cover.images[0]:defaultImg" alt="">
           <div class="info">
-            <span>这是什么玩意啊  太好吃了</span>
-            <el-tag class="status">已发布</el-tag>
-            <span class="date">2019-12-23</span>
+            <span>{{item.title}}</span>
+            <el-tag :type="item.status | filterButton" class="status">{{item.status | filterStatus}}</el-tag>
+            <span class="date">{{item.pubdate}}</span>
           </div>
         </div>
         <div class="right">
@@ -46,12 +46,69 @@
 export default {
   data () {
     return {
+      contentList: [],
+      channels: [],
       searchForm: {
         radio: 5,
-        value: '',
-        dateRange: ''
+        channel: null,
+        dateRange: []
+      },
+      defaultImg: require('../../assets/img/back.jpeg')
+    }
+  },
+  methods: {
+    // 获取内容列表
+    getContentList () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        this.contentList = result.data.results
+      })
+    },
+    // 获取频道列表
+    gteChannel () {
+      this.$axios({
+        url: '/channels'
+      }).then(result => {
+        this.channels = result.data.channels
+      })
+    }
+  },
+  filters: {
+    // 过滤文章发表状态按钮
+    filterButton (value) {
+      switch (value) {
+        case 0:
+          return 'info'
+        case 1:
+          return 'warning'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        default:
+          break
+      }
+    },
+    // 过滤文章发表状态
+    filterStatus (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发布'
+        case 3:
+          return '审核失败'
+        default:
+          break
       }
     }
+  },
+  created () {
+    this.gteChannel()
+    this.getContentList()
   }
 }
 </script>
