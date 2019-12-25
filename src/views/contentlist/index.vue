@@ -86,7 +86,6 @@ export default {
   methods: {
     // 删除内容列表
     delContent (id) {
-      alert(id)
       this.$confirm('确定真的要删除这条内容么').then(() => {
         this.$axios({
           url: `/articles/${id}`,
