@@ -19,13 +19,8 @@
                   <el-radio :label="0">无图</el-radio>
                   <el-radio :label="-1">自动</el-radio>
               </el-radio-group>
-              {{dataForm.cover}}
           </el-form-item>
-          <div class="cover_img">
-            <div class="cover_item" v-for="item in dataForm.cover.images" :key="item">
-              <img src="../../assets/img/pic_bg.png" alt="">
-            </div>
-          </div>
+          <coverimg :list="dataForm.cover.images"></coverimg>
           <el-form-item prop="channel_id" label="频道">
               <el-select v-model="dataForm.channel_id">
                   <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -50,7 +45,7 @@ export default {
           type: 0,
           images: []
         },
-        channel_id: ''
+        channel_id: null
       },
       dataRules: {
         title: [{ required: true, message: '请输入标题' }, { min: 5, max: 30, message: '输入字符请在5-30字符之间' }],
@@ -118,21 +113,24 @@ export default {
             type: 0,
             images: []
           },
-          channel_id: ''
+          channel_id: null
         }
       }
     },
     'dataForm.cover.type': function () {
       switch (this.dataForm.cover.type) {
         // 封面类型 -1:自动，0-无图，1-1张，3-3张
-        case -1 && 0:
+        case 0:
+          this.dataForm.cover.images = []
+          break
+        case -1:
           this.dataForm.cover.images = []
           break
         case 1:
-          this.dataForm.cover.images = ['']
+          this.dataForm.cover.images = this.dataForm.cover.images.length ? this.dataForm.cover.images : ['']
           break
         case 3:
-          this.dataForm.cover.images = ['', '', '']
+          this.dataForm.cover.images = this.dataForm.cover.images.length ? this.dataForm.cover.images : ['', '', '']
           break
         default:
           break
@@ -142,19 +140,5 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-.cover_img{
-  display: flex;
-  margin-left: 80px;
-  .cover_item{
-    border: 1px solid #cccccc;
-    height: 250px;
-    width: 250px;
-    padding: 20px 20px;
-    img{
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
+<style>
 </style>
