@@ -13,13 +13,19 @@
               <quilleditor v-model="dataForm.content" style="height:300px;"></quilleditor>
           </el-form-item>
           <el-form-item prop="cover" label="封面" style="margin-top:130px;">
-              <el-radio-group>
-                  <el-radio label="单图"></el-radio>
-                  <el-radio label="三图"></el-radio>
-                  <el-radio label="无图"></el-radio>
-                  <el-radio label="自动"></el-radio>
+              <el-radio-group v-model="dataForm.cover.type">
+                  <el-radio :label="1">单图</el-radio>
+                  <el-radio :label="3">三图</el-radio>
+                  <el-radio :label="0">无图</el-radio>
+                  <el-radio :label="-1">自动</el-radio>
               </el-radio-group>
+              {{dataForm.cover}}
           </el-form-item>
+          <div class="cover_img">
+            <div class="cover_item" v-for="item in dataForm.cover.images" :key="item">
+              <img src="../../assets/img/pic_bg.png" alt="">
+            </div>
+          </div>
           <el-form-item prop="channel_id" label="频道">
               <el-select v-model="dataForm.channel_id">
                   <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -115,11 +121,40 @@ export default {
           channel_id: ''
         }
       }
+    },
+    'dataForm.cover.type': function () {
+      switch (this.dataForm.cover.type) {
+        // 封面类型 -1:自动，0-无图，1-1张，3-3张
+        case -1 && 0:
+          this.dataForm.cover.images = []
+          break
+        case 1:
+          this.dataForm.cover.images = ['']
+          break
+        case 3:
+          this.dataForm.cover.images = ['', '', '']
+          break
+        default:
+          break
+      }
     }
   }
 }
 </script>
 
-<style>
-
+<style lang="less" scoped>
+.cover_img{
+  display: flex;
+  margin-left: 80px;
+  .cover_item{
+    border: 1px solid #cccccc;
+    height: 250px;
+    width: 250px;
+    padding: 20px 20px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
 </style>
