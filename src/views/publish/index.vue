@@ -127,10 +127,10 @@ export default {
           this.dataForm.cover.images = []
           break
         case 1:
-          this.dataForm.cover.images = this.dataForm.cover.images.length ? this.dataForm.cover.images : ['']
+          this.dataForm.cover.images = this.dataForm.cover.images.length === 1 ? this.dataForm.cover.images : ['']
           break
         case 3:
-          this.dataForm.cover.images = this.dataForm.cover.images.length ? this.dataForm.cover.images : ['', '', '']
+          this.dataForm.cover.images = this.dataForm.cover.images.length === 3 ? this.dataForm.cover.images : ['', '', '']
           break
         default:
           break
