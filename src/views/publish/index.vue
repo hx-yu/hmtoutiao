@@ -67,9 +67,10 @@ export default {
     articlePublish (draft) {
       this.$refs.pubdata.validate(isOk => {
         if (isOk) {
+          let { articleId } = this.$route.params
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
             params: {
               draft
             },
