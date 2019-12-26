@@ -5,14 +5,14 @@
         <template slot="title">发布文章</template>
       </breadcrumb>
       <!-- 表单区域 -->
-      <el-form ref="pubdata" :model="dataForm" :rules="dataRules" style="margin-left:50px;" label-width="80px">
+      <el-form ref="pubdata" :model="dataForm" :rules="dataRules" style="margin-left:30px;" label-width="80px">
           <el-form-item prop="title" label="标题">
               <el-input v-model="dataForm.title" style="width:60%;"></el-input>
           </el-form-item>
           <el-form-item prop="content" label="内容">
-              <el-input v-model="dataForm.content" type="textarea" rows="4"></el-input>
+              <quilleditor v-model="dataForm.content" style="height:300px;"></quilleditor>
           </el-form-item>
-          <el-form-item prop="cover" label="封面">
+          <el-form-item prop="cover" label="封面" style="margin-top:130px;">
               <el-radio-group>
                   <el-radio label="单图"></el-radio>
                   <el-radio label="三图"></el-radio>
