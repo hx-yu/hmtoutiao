@@ -55,6 +55,14 @@ export default {
     }
   },
   methods: {
+    // 获取指定文章信息
+    getArticleById (id) {
+      this.$axios({
+        url: `/articles/${id}`
+      }).then(result => {
+        this.dataForm = result.data
+      })
+    },
     // 发表文章
     articlePublish (draft) {
       this.$refs.pubdata.validate(isOk => {
@@ -87,6 +95,26 @@ export default {
   },
   created () {
     this.getChannel()
+    let { articleId } = this.$route.params
+    articleId && this.getArticleById(articleId)
+  },
+  watch: {
+    $route: function (to, from) {
+      if (to.params.articleId) {
+        // 是修改
+      } else {
+        // 是发表文章
+        this.dataForm = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          },
+          channel_id: ''
+        }
+      }
+    }
   }
 }
 </script>

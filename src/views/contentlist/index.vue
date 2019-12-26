@@ -40,7 +40,7 @@
         </div>
       </div>
       <div class="right">
-        <span>
+        <span @click="editContent(item.id.toString())">
           <i class="el-icon-edit"></i>修改
         </span>
         <span @click="delContent(item.id.toString())">
@@ -84,6 +84,10 @@ export default {
     }
   },
   methods: {
+    // 修改内容
+    editContent (id) {
+      this.$router.push(`/home/publish/${id}`)
+    },
     // 删除内容列表
     delContent (id) {
       this.$confirm('确定真的要删除这条内容么').then(() => {
