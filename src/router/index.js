@@ -24,6 +24,8 @@ export default new VueRouter({
         { path: 'publish',
           component: () => import('../views/publish') },
         { path: 'publish/:articleId',
-          component: () => import('../views/publish') }]
+          component: () => import('../views/publish') },
+        { path: 'userinfo',
+          component: () => import('../views/userinfo') }]
     }, { path: '/login', component: Login }]
 })
