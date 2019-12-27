@@ -3,25 +3,25 @@
     <breadcrumb slot="header">
       <template slot="title">用户信息</template>
     </breadcrumb>
-    <el-form style="margin-left:100px;" label-width="100px">
-        <el-form-item label="用户名：" style="width:40%">
+    <el-form ref="myForm" :model="dataForm" :rules="dataRules" style="margin-left:100px;" label-width="100px">
+        <el-form-item prop="name" label="用户名：" style="width:40%">
             <el-input v-model="dataForm.name"></el-input>
         </el-form-item>
         <el-form-item label="简介：" style="width:40%">
             <el-input v-model="dataForm.intro"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱：" style="width:40%">
+        <el-form-item prop="email" label="邮箱：" style="width:40%">
             <el-input v-model="dataForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="手机号：" style="width:40%">
+        <el-form-item prop="mobile" label="手机号：" style="width:40%">
             <el-input disabled v-model="dataForm.mobile"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary">保存</el-button>
+            <el-button @click="saveUserInfo" type="primary">保存</el-button>
         </el-form-item>
     </el-form>
     <el-upload class="uesrImg" action="" :http-request="uploadUserImg">
-        <img src="../../assets/img/avatar.jpg" alt="">
+        <img :src="dataForm.photo" alt="">
     </el-upload>
   </el-card>
 </template>
@@ -36,11 +36,30 @@ export default {
         photo: '',
         email: '',
         mobile: ''
+      },
+      dataRules: {
+        name: [{ required: true, message: '请输入用户名' }, { min: 1, max: 7, message: '请控制在1-7字符之间' }],
+        email: [{ required: true, message: '请输入邮箱' }, { pattern: /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, message: '邮箱格式不正确' }]
       }
     }
   },
   methods: {
-    //   获取用户信息
+    // 保存用户信息
+    saveUserInfo () {
+      this.$refs.myForm.validate().then(result => {
+        this.$axios({
+          url: '/user/profile',
+          method: 'patch',
+          data: this.dataForm
+        }).then(result => {
+          this.$message({
+            type: 'success',
+            message: '保存信息成功'
+          })
+        })
+      })
+    },
+    // 获取用户信息
     getUserInfo () {
       this.$axios({
         url: '/user/profile'
