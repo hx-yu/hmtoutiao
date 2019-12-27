@@ -1,10 +1,11 @@
 <template>
   <div class="cover_img">
-      <div class="cover_item" v-for="(item,index) in list" :key="index" @click="addCover">
-          <span>点击添加图片</span>
+      <div class="cover_item" v-for="(item,index) in list" :key="index" @click="addCover(index)">
           <img :src="item?item:defaultImg" alt="">
       </div>
-      <el-dialog title="请选择封面图片" :visible="dialogVisible" :before-close="handleClose"></el-dialog>
+      <el-dialog title="请选择封面图片" :visible="dialogVisible" :before-close="handleClose">
+        <previewimg @disImg="saveImg"></previewimg>
+      </el-dialog>
   </div>
 </template>
 
@@ -14,13 +15,20 @@ export default {
   data () {
     return {
       dialogVisible: false,
-      defaultImg: require('../../assets/img/pic_bg.png')
+      defaultImg: require('../../assets/img/pic_bg.png'),
+      index: -1
     }
   },
   methods: {
+    // 接收子组件传来的url地址
+    saveImg (url) {
+      this.$emit('disImg', url, this.index)
+      this.dialogVisible = false
+    },
     // 打开封面弹窗
-    addCover () {
+    addCover (index) {
       this.dialogVisible = true
+      this.index = index
     },
     // 关闭封面弹窗
     handleClose () {

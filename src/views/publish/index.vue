@@ -20,7 +20,7 @@
                   <el-radio :label="-1">自动</el-radio>
               </el-radio-group>
           </el-form-item>
-          <coverimg :list="dataForm.cover.images"></coverimg>
+          <coverimg @disImg="saveImg" :list="dataForm.cover.images"></coverimg>
           <el-form-item prop="channel_id" label="频道">
               <el-select v-model="dataForm.channel_id">
                   <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
@@ -56,6 +56,10 @@ export default {
     }
   },
   methods: {
+    // 接收子组件传来的url和index
+    saveImg (url, index) {
+      this.dataForm.cover.images.splice(index, 1, url)
+    },
     // 获取指定文章信息
     getArticleById (id) {
       this.$axios({
