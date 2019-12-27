@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <breadcrumb slot="header">
       <template slot="title">用户信息</template>
     </breadcrumb>
@@ -20,7 +20,7 @@
             <el-button @click="saveUserInfo" type="primary">保存</el-button>
         </el-form-item>
     </el-form>
-    <el-upload class="uesrImg" action="" :http-request="uploadUserImg">
+    <el-upload class="uesrImg" action="" :http-request="uploadUserImg" :show-file-list="false">
         <img :src="dataForm.photo" alt="">
     </el-upload>
   </el-card>
@@ -40,10 +40,25 @@ export default {
       dataRules: {
         name: [{ required: true, message: '请输入用户名' }, { min: 1, max: 7, message: '请控制在1-7字符之间' }],
         email: [{ required: true, message: '请输入邮箱' }, { pattern: /^([a-zA-Z]|[0-9])(\w|-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, message: '邮箱格式不正确' }]
-      }
+      },
+      loading: false
     }
   },
   methods: {
+    // 上传用户图片
+    uploadUserImg (params) {
+      this.loading = true
+      let fd = new FormData()
+      fd.append('photo', params.file)
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data: fd
+      }).then(result => {
+        this.loading = false
+        this.dataForm.photo = result.data.photo
+      })
+    },
     // 保存用户信息
     saveUserInfo () {
       this.$refs.myForm.validate().then(result => {
