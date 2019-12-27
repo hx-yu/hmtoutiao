@@ -5,16 +5,16 @@
     </breadcrumb>
     <el-form style="margin-left:100px;" label-width="100px">
         <el-form-item label="用户名：" style="width:40%">
-            <el-input></el-input>
+            <el-input v-model="dataForm.name"></el-input>
         </el-form-item>
         <el-form-item label="简介：" style="width:40%">
-            <el-input></el-input>
+            <el-input v-model="dataForm.intro"></el-input>
         </el-form-item>
         <el-form-item label="邮箱：" style="width:40%">
-            <el-input></el-input>
+            <el-input v-model="dataForm.email"></el-input>
         </el-form-item>
         <el-form-item label="手机号：" style="width:40%">
-            <el-input></el-input>
+            <el-input disabled v-model="dataForm.mobile"></el-input>
         </el-form-item>
         <el-form-item>
             <el-button type="primary">保存</el-button>
@@ -30,8 +30,27 @@
 export default {
   data () {
     return {
-      dataForm: {}
+      dataForm: {
+        name: '',
+        intro: '',
+        photo: '',
+        email: '',
+        mobile: ''
+      }
     }
+  },
+  methods: {
+    //   获取用户信息
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+      }).then(result => {
+        this.dataForm = result.data
+      })
+    }
+  },
+  created () {
+    this.getUserInfo()
   }
 }
 </script>
