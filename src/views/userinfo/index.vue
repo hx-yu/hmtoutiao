@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -57,6 +58,7 @@ export default {
       }).then(result => {
         this.loading = false
         this.dataForm.photo = result.data.photo
+        eventBus.$emit('eventBus')
       })
     },
     // 保存用户信息
@@ -71,6 +73,7 @@ export default {
             type: 'success',
             message: '保存信息成功'
           })
+          eventBus.$emit('eventBus')
         })
       })
     },

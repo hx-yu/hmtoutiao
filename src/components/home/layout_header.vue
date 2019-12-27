@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
   data () {
     return {
@@ -32,9 +33,19 @@ export default {
     }
   },
   methods: {
+    // 获取用户信息
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile',
+        method: 'get'
+      }).then(result => {
+        this.userInfo = result.data
+      })
+    },
+    // 右侧下拉菜单导航
     handlerCommand (command) {
       if (command === 'info') {
-
+        this.$router.push('/userinfo')
       } else if (command === 'git') {
         window.location.href = 'https://github.com/YHX0507'
       } else {
@@ -44,11 +55,9 @@ export default {
     }
   },
   created () {
-    this.$axios({
-      url: '/user/profile',
-      method: 'get'
-    }).then(result => {
-      this.userInfo = result.data
+    this.getUserInfo()
+    eventBus.$on('eventBus', () => {
+      this.getUserInfo()
     })
   }
 }
