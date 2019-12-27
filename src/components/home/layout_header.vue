@@ -45,7 +45,7 @@ export default {
     // 右侧下拉菜单导航
     handlerCommand (command) {
       if (command === 'info') {
-        this.$router.push('/userinfo')
+        this.$router.push('/home/userinfo')
       } else if (command === 'git') {
         window.location.href = 'https://github.com/YHX0507'
       } else {
