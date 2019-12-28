@@ -2,7 +2,7 @@
   <div>
     <el-row class="layout_header" type="flex" align="middle">
       <el-col class="left" :span="12">
-        <i class="el-icon-s-fold"></i>
+        <i @click="collapseOrClose" :class="{'el-icon-s-unfold':this.collapse,'el-icon-s-fold':!this.collapse}"></i>
         <span>江苏传智博客教育科技股份有限公司</span>
       </el-col>
       <el-col class="right" :span="12">
@@ -29,10 +29,16 @@ export default {
   data () {
     return {
       userInfo: {},
-      userImg: require('../../assets/img/avatar.jpg')
+      userImg: require('../../assets/img/avatar.jpg'),
+      collapse: false
     }
   },
   methods: {
+    // 折叠左侧导航
+    collapseOrClose () {
+      this.collapse = !this.collapse
+      eventBus.$emit('collapseOrClose')
+    },
     // 获取用户信息
     getUserInfo () {
       this.$axios({
