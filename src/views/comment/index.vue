@@ -51,46 +51,44 @@ export default {
       this.getComment()
     },
     // 获取评论
-    getComment () {
+    async getComment () {
       // 加载开始
       this.loading = true
-      this.$axios({
+      let result = await this.$axios({
         url: '/articles',
         params: {
           response_type: 'comment',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
-        // 加载结束
-        this.loading = false
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
+      // 加载结束
+      this.loading = false
     },
     transState (row, column, cellValue, index) {
       return row.comment_status ? '正常' : '关闭'
     },
-    openOrClose (obj) {
+    // 打开或关闭评论
+    async openOrClose (obj) {
       let state = obj.comment_status
-      this.$confirm(`您是否确定要${state ? '关闭' : '打开'}评论么?`, '提示', {
+      await this.$confirm(`您是否确定要${state ? '关闭' : '打开'}评论么?`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$axios({
-          url: '/comments/status',
-          method: 'put',
-          params: {
-            article_id: obj.id.toString()
-          },
-          data: {
-            allow_comment: !obj.comment_status
-          }
-        }).then(result => {
-          this.getComment()
-        })
       })
+      await this.$axios({
+        url: '/comments/status',
+        method: 'put',
+        params: {
+          article_id: obj.id.toString()
+        },
+        data: {
+          allow_comment: !obj.comment_status
+        }
+      })
+      this.getComment()
     }
   },
   created () {
