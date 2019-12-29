@@ -69,22 +69,29 @@ export default {
     },
     // 发表文章
     async articlePublish (draft) {
-      let isOk = await this.$refs.pubdata.validate()
-      if (isOk) {
-        let { articleId } = this.$route.params
-        await this.$axios({
-          url: articleId ? `/articles/${articleId}` : '/articles',
-          method: articleId ? 'put' : 'post',
-          params: {
-            draft
-          },
-          data: this.dataForm
-        })
+      try {
+        let isOk = await this.$refs.pubdata.validate()
+        if (isOk) {
+          let { articleId } = this.$route.params
+          await this.$axios({
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
+            params: {
+              draft
+            },
+            data: this.dataForm
+          })
+          this.$message({
+            type: 'success',
+            message: '发表成功'
+          })
+          this.$router.push('/home/contentlist')
+        }
+      } catch (error) {
         this.$message({
-          type: 'success',
-          message: '发表成功'
+          message: '信息填写不完整',
+          type: 'warning'
         })
-        this.$router.push('/home/contentlist')
       }
     },
     // 获取频道列表

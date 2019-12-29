@@ -89,12 +89,23 @@ export default {
     },
     // 删除图片
     async deleteImg (id) {
-      await this.$confirm('您真的要删除图片么？')
-      await this.$axios({
-        url: `/user/images/${id}`,
-        method: 'delete'
-      })
-      this.getMaterial()
+      try {
+        await this.$confirm('您真的要删除图片么？')
+        await this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        })
+        this.getMaterial()
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+      } catch (error) {
+        this.$message({
+          message: '删除失败',
+          type: 'warning'
+        })
+      }
     },
     // 收藏或取消收藏
     async collectOrCancel (item) {

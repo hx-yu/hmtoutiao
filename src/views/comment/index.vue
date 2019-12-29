@@ -72,23 +72,34 @@ export default {
     },
     // 打开或关闭评论
     async openOrClose (obj) {
-      let state = obj.comment_status
-      await this.$confirm(`您是否确定要${state ? '关闭' : '打开'}评论么?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-      await this.$axios({
-        url: '/comments/status',
-        method: 'put',
-        params: {
-          article_id: obj.id.toString()
-        },
-        data: {
-          allow_comment: !obj.comment_status
-        }
-      })
-      this.getComment()
+      try {
+        let state = obj.comment_status
+        await this.$confirm(`您是否确定要${state ? '关闭' : '打开'}评论么?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        await this.$axios({
+          url: '/comments/status',
+          method: 'put',
+          params: {
+            article_id: obj.id.toString()
+          },
+          data: {
+            allow_comment: !obj.comment_status
+          }
+        })
+        this.getComment()
+        this.$message({
+          type: 'success',
+          message: `${state ? '关闭' : '打开'}成功`
+        })
+      } catch (error) {
+        this.$message({
+          type: 'warning',
+          message: '取消了操作评论'
+        })
+      }
     }
   },
   created () {

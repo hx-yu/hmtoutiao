@@ -90,16 +90,20 @@ export default {
     },
     // 删除内容列表
     async delContent (id) {
-      await this.$confirm('确定真的要删除这条内容么')
-      await this.$axios({
-        url: `/articles/${id}`,
-        method: 'delete'
-      })
-      this.$message({
-        message: '删除成功',
-        type: 'success'
-      })
-      this.getContentList()
+      try {
+        await this.$confirm('确定真的要删除这条内容么')
+        await this.$axios({
+          url: `/articles/${id}`,
+          method: 'delete'
+        })
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getContentList()
+      } catch (error) {
+
+      }
     },
     // 搜索区域发生改变
     getChange () {
