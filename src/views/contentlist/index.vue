@@ -89,19 +89,17 @@ export default {
       this.$router.push(`/home/publish/${id}`)
     },
     // 删除内容列表
-    delContent (id) {
-      this.$confirm('确定真的要删除这条内容么').then(() => {
-        this.$axios({
-          url: `/articles/${id}`,
-          method: 'delete'
-        }).then(result => {
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getContentList()
-        })
+    async delContent (id) {
+      await this.$confirm('确定真的要删除这条内容么')
+      await this.$axios({
+        url: `/articles/${id}`,
+        method: 'delete'
       })
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      this.getContentList()
     },
     // 搜索区域发生改变
     getChange () {
@@ -126,24 +124,22 @@ export default {
       this.getContentList(params)
     },
     // 获取内容列表
-    getContentList (params) {
+    async getContentList (params) {
       this.loading = true
-      this.$axios({
+      let result = await this.$axios({
         url: '/articles',
         params
-      }).then(result => {
-        this.contentList = result.data.results
-        this.page.total = result.data.total_count
-        this.loading = false
       })
+      this.contentList = result.data.results
+      this.page.total = result.data.total_count
+      this.loading = false
     },
     // 获取频道列表
-    gteChannel () {
-      this.$axios({
+    async gteChannel () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     }
   },
   filters: {

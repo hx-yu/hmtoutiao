@@ -42,20 +42,19 @@ export default {
     }
   },
   methods: {
-    loginCheck () {
-      this.$refs.myForm.validate(isOk => {
-        if (isOk) {
-          this.$axios({
-            url: '/authorizations',
-            method: 'post',
-            data: this.formData
-          }).then(result => {
-            let token = result.data.token
-            window.localStorage.setItem('user_token', token)
-            this.$router.push('/home')
-          })
-        }
-      })
+    // 登录校验
+    async loginCheck () {
+      let isOk = await this.$refs.myForm.validate()
+      if (isOk) {
+        let result = await this.$axios({
+          url: '/authorizations',
+          method: 'post',
+          data: this.formData
+        })
+        let token = result.data.token
+        window.localStorage.setItem('user_token', token)
+        this.$router.push('/home')
+      }
     }
   }
 }

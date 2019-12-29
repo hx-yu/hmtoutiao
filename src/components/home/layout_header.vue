@@ -40,13 +40,12 @@ export default {
       eventBus.$emit('collapseOrClose')
     },
     // 获取用户信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile',
         method: 'get'
-      }).then(result => {
-        this.userInfo = result.data
       })
+      this.userInfo = result.data
     },
     // 右侧下拉菜单导航
     handlerCommand (command) {

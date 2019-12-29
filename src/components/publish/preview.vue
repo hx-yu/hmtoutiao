@@ -37,16 +37,15 @@ export default {
   },
   methods: {
     //   上传图片
-    uploadImg (params) {
+    async uploadImg (params) {
       let fd = new FormData()
       fd.append('image', params.file)
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/images',
         method: 'post',
         data: fd
-      }).then(result => {
-        this.$emit('disImg', result.data.url)
       })
+      this.$emit('disImg', result.data.url)
     },
     // 子传父url
     disImg (url) {
@@ -58,18 +57,17 @@ export default {
       this.getImg()
     },
     // 获取图片信息
-    getImg () {
-      this.$axios({
+    async getImg () {
+      let result = await this.$axios({
         url: '/user/images',
         params: {
           collect: false,
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     }
   },
   created () {

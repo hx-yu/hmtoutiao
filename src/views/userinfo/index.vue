@@ -47,43 +47,39 @@ export default {
   },
   methods: {
     // 上传用户图片
-    uploadUserImg (params) {
+    async uploadUserImg (params) {
       this.loading = true
       let fd = new FormData()
       fd.append('photo', params.file)
-      this.$axios({
+      let result = await this.$axios({
         url: '/user/photo',
         method: 'patch',
         data: fd
-      }).then(result => {
-        this.loading = false
-        this.dataForm.photo = result.data.photo
-        eventBus.$emit('eventBus')
       })
+      this.loading = false
+      this.dataForm.photo = result.data.photo
+      eventBus.$emit('eventBus')
     },
     // 保存用户信息
-    saveUserInfo () {
-      this.$refs.myForm.validate().then(result => {
-        this.$axios({
-          url: '/user/profile',
-          method: 'patch',
-          data: this.dataForm
-        }).then(result => {
-          this.$message({
-            type: 'success',
-            message: '保存信息成功'
-          })
-          eventBus.$emit('eventBus')
-        })
+    async saveUserInfo () {
+      await this.$refs.myForm.validate()
+      await this.$axios({
+        url: '/user/profile',
+        method: 'patch',
+        data: this.dataForm
       })
+      this.$message({
+        type: 'success',
+        message: '保存信息成功'
+      })
+      eventBus.$emit('eventBus')
     },
     // 获取用户信息
-    getUserInfo () {
-      this.$axios({
+    async getUserInfo () {
+      let result = await this.$axios({
         url: '/user/profile'
-      }).then(result => {
-        this.dataForm = result.data
       })
+      this.dataForm = result.data
     }
   },
   created () {

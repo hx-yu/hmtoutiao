@@ -61,42 +61,38 @@ export default {
       this.dataForm.cover.images.splice(index, 1, url)
     },
     // 获取指定文章信息
-    getArticleById (id) {
-      this.$axios({
+    async getArticleById (id) {
+      let result = await this.$axios({
         url: `/articles/${id}`
-      }).then(result => {
-        this.dataForm = result.data
       })
+      this.dataForm = result.data
     },
     // 发表文章
-    articlePublish (draft) {
-      this.$refs.pubdata.validate(isOk => {
-        if (isOk) {
-          let { articleId } = this.$route.params
-          this.$axios({
-            url: articleId ? `/articles/${articleId}` : '/articles',
-            method: articleId ? 'put' : 'post',
-            params: {
-              draft
-            },
-            data: this.dataForm
-          }).then(result => {
-            this.$message({
-              type: 'success',
-              message: '发表成功'
-            })
-            this.$router.push('/home/contentlist')
-          })
-        }
-      })
+    async articlePublish (draft) {
+      let isOk = await this.$refs.pubdata.validate()
+      if (isOk) {
+        let { articleId } = this.$route.params
+        await this.$axios({
+          url: articleId ? `/articles/${articleId}` : '/articles',
+          method: articleId ? 'put' : 'post',
+          params: {
+            draft
+          },
+          data: this.dataForm
+        })
+        this.$message({
+          type: 'success',
+          message: '发表成功'
+        })
+        this.$router.push('/home/contentlist')
+      }
     },
     // 获取频道列表
-    getChannel () {
-      this.$axios({
+    async getChannel () {
+      let result = await this.$axios({
         url: '/channels'
-      }).then(result => {
-        this.channels = result.data.channels
       })
+      this.channels = result.data.channels
     }
   },
   created () {

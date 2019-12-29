@@ -88,40 +88,37 @@ export default {
       this.getMaterial()
     },
     // 删除图片
-    deleteImg (id) {
-      this.$confirm('您真的要删除图片么？').then(() => {
-        this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        }).then(result => {
-          this.getMaterial()
-        })
+    async deleteImg (id) {
+      await this.$confirm('您真的要删除图片么？')
+      await this.$axios({
+        url: `/user/images/${id}`,
+        method: 'delete'
       })
+      this.getMaterial()
     },
     // 收藏或取消收藏
-    collectOrCancel (item) {
-      this.$axios({
+    async collectOrCancel (item) {
+      await this.$axios({
         url: `/user/images/${item.id}`,
         method: 'put',
         data: {
           collect: !item.is_collected
         }
-      }).then(result => {
-        this.getMaterial()
       })
+      this.getMaterial()
     },
-    uploadImg (params) {
+    // 上传图片
+    async uploadImg (params) {
       this.loading = true
       let fd = new FormData()
       fd.append('image', params.file)
-      this.$axios({
+      await this.$axios({
         url: '/user/images',
         method: 'post',
         data: fd
-      }).then(result => {
-        this.loading = false
-        this.getMaterial()
       })
+      this.loading = false
+      this.getMaterial()
     },
     // 点击tabs请求全部列表或收藏列表
     allOrCollect () {
@@ -129,18 +126,17 @@ export default {
       this.getMaterial()
     },
     // 请求数据
-    getMaterial () {
-      this.$axios({
+    async getMaterial () {
+      let result = await this.$axios({
         url: '/user/images',
         params: {
           collect: this.activeName === 'collect', // 通过判断tabs名字查询是否为收藏的数据
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count
     }
   },
   created () {
