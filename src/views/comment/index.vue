@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { getComment, openOrClose } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -54,14 +55,12 @@ export default {
     async getComment () {
       // 加载开始
       this.loading = true
-      let result = await this.$axios({
-        url: '/articles',
-        params: {
-          response_type: 'comment',
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      })
+      let params = {
+        response_type: 'comment',
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
+      let result = await getComment(params)
       this.list = result.data.results
       this.page.total = result.data.total_count
       // 加载结束
@@ -79,16 +78,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        await this.$axios({
-          url: '/comments/status',
-          method: 'put',
-          params: {
-            article_id: obj.id.toString()
-          },
-          data: {
-            allow_comment: !obj.comment_status
-          }
-        })
+        await openOrClose(obj.id, state)
         this.getComment()
         this.$message({
           type: 'success',

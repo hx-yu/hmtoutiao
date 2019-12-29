@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { getUserInfo, saveUserInfo } from '../../actions/articles'
 import eventBus from '../../utils/eventBus'
 export default {
   data () {
@@ -63,11 +64,7 @@ export default {
     // 保存用户信息
     async saveUserInfo () {
       await this.$refs.myForm.validate()
-      await this.$axios({
-        url: '/user/profile',
-        method: 'patch',
-        data: this.dataForm
-      })
+      await saveUserInfo(this.dataForm)
       this.$message({
         type: 'success',
         message: '保存信息成功'
@@ -76,9 +73,7 @@ export default {
     },
     // 获取用户信息
     async getUserInfo () {
-      let result = await this.$axios({
-        url: '/user/profile'
-      })
+      let result = await getUserInfo()
       this.dataForm = result.data
     }
   },

@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { login } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -46,11 +47,7 @@ export default {
     async loginCheck () {
       let isOk = await this.$refs.myForm.validate()
       if (isOk) {
-        let result = await this.$axios({
-          url: '/authorizations',
-          method: 'post',
-          data: this.formData
-        })
+        let result = await login(this.formData)
         let token = result.data.token
         window.localStorage.setItem('user_token', token)
         this.$router.push('/home')

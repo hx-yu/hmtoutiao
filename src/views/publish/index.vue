@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { getChannel, articlePublish, getArticleById } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -62,9 +63,7 @@ export default {
     },
     // 获取指定文章信息
     async getArticleById (id) {
-      let result = await this.$axios({
-        url: `/articles/${id}`
-      })
+      let result = await getArticleById()
       this.dataForm = result.data
     },
     // 发表文章
@@ -73,14 +72,7 @@ export default {
         let isOk = await this.$refs.pubdata.validate()
         if (isOk) {
           let { articleId } = this.$route.params
-          await this.$axios({
-            url: articleId ? `/articles/${articleId}` : '/articles',
-            method: articleId ? 'put' : 'post',
-            params: {
-              draft
-            },
-            data: this.dataForm
-          })
+          await articlePublish(articleId, draft, this.dataForm)
           this.$message({
             type: 'success',
             message: '发表成功'
@@ -96,9 +88,7 @@ export default {
     },
     // 获取频道列表
     async getChannel () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+      let result = await getChannel()
       this.channels = result.data.channels
     }
   },

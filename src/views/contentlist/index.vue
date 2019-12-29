@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { delContent, getContentList, getChannel } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -92,10 +93,7 @@ export default {
     async delContent (id) {
       try {
         await this.$confirm('确定真的要删除这条内容么')
-        await this.$axios({
-          url: `/articles/${id}`,
-          method: 'delete'
-        })
+        await delContent(id)
         this.$message({
           message: '删除成功',
           type: 'success'
@@ -130,19 +128,14 @@ export default {
     // 获取内容列表
     async getContentList (params) {
       this.loading = true
-      let result = await this.$axios({
-        url: '/articles',
-        params
-      })
+      let result = await getContentList(params)
       this.contentList = result.data.results
       this.page.total = result.data.total_count
       this.loading = false
     },
     // 获取频道列表
-    async gteChannel () {
-      let result = await this.$axios({
-        url: '/channels'
-      })
+    async getChannel () {
+      let result = await getChannel()
       this.channels = result.data.channels
     }
   },
@@ -179,7 +172,7 @@ export default {
     }
   },
   created () {
-    this.gteChannel()
+    this.getChannel()
     // 第一次请求文章列表数据不需要传递params参数
     this.getContentList({ page: 1, per_page: 10 })
   }

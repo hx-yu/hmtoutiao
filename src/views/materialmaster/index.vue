@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { getMaterial, uploadImg, collectOrCancel, deleteImg } from '../../actions/articles'
 export default {
   data () {
     return {
@@ -91,10 +92,7 @@ export default {
     async deleteImg (id) {
       try {
         await this.$confirm('您真的要删除图片么？')
-        await this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        })
+        await deleteImg(id)
         this.getMaterial()
         this.$message({
           message: '删除成功',
@@ -109,13 +107,7 @@ export default {
     },
     // 收藏或取消收藏
     async collectOrCancel (item) {
-      await this.$axios({
-        url: `/user/images/${item.id}`,
-        method: 'put',
-        data: {
-          collect: !item.is_collected
-        }
-      })
+      await collectOrCancel(item.id, item.is_collected)
       this.getMaterial()
     },
     // 上传图片
@@ -123,11 +115,7 @@ export default {
       this.loading = true
       let fd = new FormData()
       fd.append('image', params.file)
-      await this.$axios({
-        url: '/user/images',
-        method: 'post',
-        data: fd
-      })
+      await uploadImg(fd)
       this.loading = false
       this.getMaterial()
     },
@@ -136,16 +124,14 @@ export default {
       this.page.currentPage = 1
       this.getMaterial()
     },
-    // 请求数据
+    // 请求素材数据
     async getMaterial () {
-      let result = await this.$axios({
-        url: '/user/images',
-        params: {
-          collect: this.activeName === 'collect', // 通过判断tabs名字查询是否为收藏的数据
-          page: this.page.currentPage,
-          per_page: this.page.pageSize
-        }
-      })
+      let params = {
+        collect: this.activeName === 'collect', // 通过判断tabs名字查询是否为收藏的数据
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
+      }
+      let result = await getMaterial(params)
       this.list = result.data.results
       this.page.total = result.data.total_count
     }
