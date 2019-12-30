@@ -63,7 +63,7 @@ export default {
     },
     // 获取指定文章信息
     async getArticleById (id) {
-      let result = await getArticleById()
+      let result = await getArticleById(id)
       this.dataForm = result.data
     },
     // 发表文章
